@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Timers;
 
 
-public class RicochetBallInterface: Form
+public class CollidingBallsInterface: Form
 {
 
       // USER INTERFACE INITIALIZATION
@@ -61,7 +61,7 @@ public class RicochetBallInterface: Form
 
 
       //CONSTRUCTOR
-      public RicochetBallInterface() 
+      public CollidingBallsInterface() 
       {
             //DECLARE SIZES
             MaximumSize = program_size;
@@ -197,7 +197,7 @@ public class RicochetBallInterface: Form
             //Open this user interface window in the center of the display.
             CenterToScreen();
 
-      }//End of constructor RicochetBallInterface
+      }//End of constructor CollidingBallsInterface
       
       //Helper Method to Reset the Run
       protected void resetRun(Object sender, EventArgs events)
@@ -373,4 +373,4 @@ public class RicochetBallInterface: Form
 
       }//End of class Graphicpanel
 
-}//End of clas RicochetBallInterface
+}//End of clas CollidingBallsInterface

@@ -13,7 +13,7 @@ public class BallMain
       System.Console.WriteLine("Welcome to the Main method of the Amelia Rotondo Assignment 4 Ball-In-Motion UI!");
 
       //register the class as an object-
-      RicochetBallInterface ball = new RicochetBallInterface();
+      CollidingBallsInterface ball = new CollidingBallsInterface();
 
       //run application
       Application.Run(ball);

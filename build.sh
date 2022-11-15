@@ -34,13 +34,13 @@ echo Compile BallUI.cs to create the file: BallUI.dll
 mcs -target:library -r:System.Drawing.dll -r:System.Windows.Forms.dll -out:BallUI.dll BallUI.cs
 
 echo Compile BallMain.cs and link the two previously created dll files to create an executable file. 
-mcs -r:System -r:System.Windows.Forms -r:BallUI.dll -out:RicochetBall.exe BallMain.cs
+mcs -r:System -r:System.Windows.Forms -r:BallUI.dll -out:CollidingBalls.exe BallMain.cs
 
 echo View the list of files in the current folder
 ls -l
 
 echo Run the Assignment 1 program.
-./RicochetBall.exe
+./CollidingBalls.exe
 
 echo The script has terminated.
 
