@@ -1,6 +1,6 @@
 /* 
 Silly Code by AMELIA ROTONDO 
-Last Edited: 11/05/2022
+Last Edited: 11/15/2022
 */
 
 using System;
@@ -12,23 +12,43 @@ using System.Timers;
 public class CollidingBallsInterface: Form
 {
 
+      /* UPDATES A4 -> A5: 
+            SET THE SPEED -> BALL 1 SPEED
+                  SPEED INPUT -> BALL 1 SPEED INPUT
+            SET THE ANGLE -> BALL 2 SPEED
+                  ANGLE INPUT -> BALL 2 SPEED INPUT
+            X =           -> 1st Ball C.Coords
+                  X_OUT   -> 1st Ball C.Coords Out
+            Y =           -> 2nd Ball C.Coords
+                  Y_OUT   -> 2nd Ball C.Coords Out
+            COMBINE START && INIT 
+            BALL COORDS -> DELETE
+            BALLS START OUT ON THE SCREEN IN 2 SET LOCATIONS
+
+            UX UPDATES:
+            Add Another Delta-X and Another Delta-Y
+            Add Another Set of C.Cord Variables
+            Add Another BALL MOVEMENTS for a Second Speed Variation
+            ADD COLLISION DETECTION
+                  SEE IF YOU CAN ADD DIRECTION CHANGE? 
+      */
+      
       // USER INTERFACE INITIALIZATION
       private Label title       = new Label();
-      private Label coord_title = new Label();
-      private Label speed_title = new Label();
-      private Label dir_title   = new Label();
-      private Label x_title     = new Label();
-      private Label y_title     = new Label();
-      private Label x_output    = new Label();
-      private Label y_output    = new Label();
+      private Label first_speed_title = new Label();
+      private Label second_speed_title   = new Label();
+      private Label first_location_title     = new Label();
+      private Label second_location_title     = new Label();
+      private Label first_location_output    = new Label();
+      private Label second_location_output    = new Label();
       private Panel header            = new Panel();
       private Panel controlz          = new Panel();
       private Graphicpanel ball_mover = new Graphicpanel();
       private Button init_button  = new Button();
       private Button start_button = new Button();
       private Button quit_button  = new Button();
-      private TextBox speed_input = new TextBox();
-      private TextBox dir_input   = new TextBox();
+      private TextBox first_speed_input = new TextBox();
+      private TextBox second_speed_input   = new TextBox();
 
       //UI STYLE VARIABLES
       private Size program_size   = new Size(1000, 1200);
@@ -37,11 +57,23 @@ public class CollidingBallsInterface: Form
       private Font title_font        = new Font("Impact", 25, FontStyle.Bold);
 
       //UX VARIABLES 
-      private static double BALL_MOVEMENTS = 30;
-      private static double delta_x   = 0;
-      private static double delta_y   = 0; 
-      private static double x_coord   = 490; 
-      private static double y_coord   = 340; 
+      private static double FIRST_MOVEMENTS = 30;
+      private static double delta_x1   = 0;
+      private static double delta_y1   = 0; 
+      private static double x1_coord   = 290; 
+      private static double y1_coord   = 390; 
+
+      /* New Variables: NOT YET IMPLEMENTED:
+
+      private static double SECOND_MOVEMENTS = 30;
+      private static double delta_x2   = 0;
+      private static double delta_y2   = 0; 
+      private static double x2_coord   = 590; 
+      private static double y2_coord   = 30; 
+      private static double dir_angle = 0;
+
+      */
+
       private static double dir_angle = 0;
 
       //Runtime State 
@@ -68,12 +100,11 @@ public class CollidingBallsInterface: Form
             MinimumSize = program_size;
 
             //INIT. TEXT
-            title.Text        = "Ricochet Ball by Amelia Rotondo";
-            coord_title.Text  = "Ball Coords:";
-            speed_title.Text  = "SET THE SPEED:";
-            dir_title.Text    = "SET THE ANGLE:";
-            x_title.Text      = "X = ";
-            y_title.Text      = "Y = ";
+            title.Text        = "Colliding Balls by Amelia Rotondo";
+            first_speed_title.Text  = "RED Ball Speed Input:";
+            second_speed_title.Text    = "BLUE Ball Speed Input:";
+            first_location_title.Text      = "RED Ball Location:";
+            second_location_title.Text      = "BLUE Ball Location:";
             init_button.Text  = "Init.";
             start_button.Text = "Start!";
             quit_button.Text  = "Quit...";
@@ -84,58 +115,54 @@ public class CollidingBallsInterface: Form
             header.Size       = new Size(1000, 200);
             ball_mover.Size   = new Size(1000, 700);
             controlz.Size     = new Size(1000, 300);
-            coord_title.Size  = new Size(200, 60);
-            speed_title.Size  = new Size(200, 60);
-            dir_title.Size    = new Size(200, 60);
-            x_title.Size      = new Size(150, 70);
-            y_title.Size      = new Size(150, 70);
+            first_speed_title.Size  = new Size(200, 60);
+            second_speed_title.Size    = new Size(200, 60);
+            first_location_title.Size      = new Size(150, 70);
+            second_location_title.Size      = new Size(150, 70);
             init_button.Size  = button_size;
             start_button.Size = button_size;
             quit_button.Size  = button_size;
-            speed_input.Size  = new Size(120, 80);
-            dir_input.Size    = new Size(120, 80);
-            x_output.Size     = new Size(120, 90);
-            y_output.Size     = new Size(120, 90);
+            first_speed_input.Size  = new Size(120, 80);
+            second_speed_input.Size    = new Size(120, 80);
+            first_location_output.Size     = new Size(120, 90);
+            second_location_output.Size     = new Size(120, 90);
             
             //INIT. COLORS
             header.BackColor       = Color.LightSeaGreen;
             ball_mover.BackColor   = Color.LightCyan;
             controlz.BackColor     = Color.LightGoldenrodYellow;
-            coord_title.BackColor  = Color.LightCoral;
-            speed_title.BackColor  = Color.LightCoral;
-            dir_title.BackColor    = Color.LightCoral;
-            x_title.BackColor      = Color.LightCoral;
-            y_title.BackColor      = Color.LightCoral;
-            speed_input.BackColor  = Color.LightPink;
-            dir_input.BackColor    = Color.LightPink;
-            x_output.BackColor     = Color.LightPink;
-            y_output.BackColor     = Color.LightPink; 
+            first_speed_title.BackColor  = Color.Pink;
+            second_speed_title.BackColor    = Color.Pink;
+            first_location_title.BackColor      = Color.Lime;
+            second_location_title.BackColor      = Color.Lime;
+            first_speed_input.BackColor  = Color.LightPink;
+            second_speed_input.BackColor    = Color.LightPink;
+            first_location_output.BackColor     = Color.LightGreen;
+            second_location_output.BackColor     = Color.LightGreen; 
             init_button.BackColor  = Color.LightPink;
             start_button.BackColor = Color.LightPink;
             quit_button.BackColor  = Color.LightPink;
 
             //INIT. FONTS
             title.Font        = title_font;
-            coord_title.Font  = control_font;
-            speed_title.Font  = control_font;
-            dir_title.Font    = control_font; 
-            x_title.Font      = control_font;
-            y_title.Font      = control_font;
+            first_speed_title.Font  = control_font;
+            second_speed_title.Font    = control_font; 
+            first_location_title.Font      = control_font;
+            second_location_title.Font      = control_font;
             init_button.Font  = control_font;
             start_button.Font = control_font;
             quit_button.Font  = control_font;
-            speed_input.Font  = control_font;
-            dir_input.Font    = control_font;
-            x_output.Font     = control_font;
-            y_output.Font     = control_font;
+            first_speed_input.Font  = control_font;
+            second_speed_input.Font    = control_font;
+            first_location_output.Font     = control_font;
+            second_location_output.Font     = control_font;
 
             //INIT. ALIGNMENTS
             title.TextAlign        = ContentAlignment.MiddleCenter;
-            coord_title.TextAlign  = ContentAlignment.MiddleCenter;
-            speed_title.TextAlign  = ContentAlignment.MiddleCenter;
-            dir_title.TextAlign    = ContentAlignment.MiddleCenter;
-            x_title.TextAlign      = ContentAlignment.MiddleCenter;
-            y_title.TextAlign      = ContentAlignment.MiddleCenter;
+            first_speed_title.TextAlign  = ContentAlignment.MiddleCenter;
+            second_speed_title.TextAlign    = ContentAlignment.MiddleCenter;
+            first_location_title.TextAlign      = ContentAlignment.MiddleCenter;
+            second_location_title.TextAlign      = ContentAlignment.MiddleCenter;
             init_button.TextAlign  = ContentAlignment.MiddleCenter;
             start_button.TextAlign = ContentAlignment.MiddleCenter;
             quit_button.TextAlign  = ContentAlignment.MiddleCenter;
@@ -146,19 +173,16 @@ public class CollidingBallsInterface: Form
             controlz.Location   = new Point(0, 900);
 
             title.Location       = new Point(125, 40);
-            coord_title.Location = new Point(450, 130);
-            speed_title.Location = new Point(200, 10);
-            dir_title.Location   = new Point(550, 10);
-            x_title.Location     = new Point(300, 200);
-            y_title.Location     = new Point(600, 200);
-            speed_input.Location = new Point(410, 10);
-            dir_input.Location   = new Point(760, 10);
-            x_output.Location    = new Point(460, 200);
-            y_output.Location    = new Point(760, 200);
-
-            init_button.Location  = new Point(30, 10);
-            start_button.Location = new Point(40, 150);
-            quit_button.Location = new Point(790, 75);
+            first_speed_title.Location = new Point(200, 50);
+            second_speed_title.Location   = new Point(550, 50);
+            first_location_title.Location     = new Point(250, 150);
+            second_location_title.Location     = new Point(600, 150);
+            first_speed_input.Location = new Point(410, 50);
+            second_speed_input.Location   = new Point(760, 50);
+            first_location_output.Location    = new Point(410, 150);
+            second_location_output.Location    = new Point(760, 150);
+            start_button.Location = new Point(30, 10);
+            quit_button.Location = new Point(40, 150);
 
             //INIT. CONTROLS
             Controls.Add(header);
@@ -167,16 +191,14 @@ public class CollidingBallsInterface: Form
             header.Controls.Add(title);
                       
             //INIT. CONTROLZ
-            controlz.Controls.Add(coord_title);
-            controlz.Controls.Add(speed_title);
-            controlz.Controls.Add(dir_title);
-            controlz.Controls.Add(x_title);
-            controlz.Controls.Add(y_title);
-            controlz.Controls.Add(speed_input);
-            controlz.Controls.Add(dir_input);
-            controlz.Controls.Add(x_output);
-            controlz.Controls.Add(y_output);
-            controlz.Controls.Add(init_button);
+            controlz.Controls.Add(first_speed_title);
+            controlz.Controls.Add(second_speed_title);
+            controlz.Controls.Add(first_location_title);
+            controlz.Controls.Add(second_location_title);
+            controlz.Controls.Add(first_speed_input);
+            controlz.Controls.Add(second_speed_input);
+            controlz.Controls.Add(first_location_output);
+            controlz.Controls.Add(second_location_output);
             controlz.Controls.Add(start_button);
             controlz.Controls.Add(quit_button);  
 
@@ -203,20 +225,20 @@ public class CollidingBallsInterface: Form
       protected void resetRun(Object sender, EventArgs events)
       {
             //Clear Text
-            speed_input.Text = " ";
-            dir_input.Text   = " ";
-            x_output.Text    = " ";
-            y_output.Text    = " ";
+            first_speed_input.Text = " ";
+            second_speed_input.Text   = " ";
+            first_location_output.Text    = " ";
+            second_location_output.Text    = " ";
 
             start_button.Text = "Start!";
             quit_button.Text  = "Quit...";
 
             //Reset Variable
-            BALL_MOVEMENTS = 0;
-            x_coord        = 490;
-            y_coord        = 340;
-            delta_x        = 0;
-            delta_y        = 0;
+            FIRST_MOVEMENTS = 0;
+            x1_coord        = 490;
+            y1_coord        = 340;
+            delta_x1        = 0;
+            delta_y1        = 0;
             dir_angle      = 0;
 
             ball_clock.Enabled = false;
@@ -264,15 +286,15 @@ public class CollidingBallsInterface: Form
                         //change text
                         if(runtime == State.Init && assertValues()) 
                         {
-                              dir_angle      = Convert.ToDouble(dir_input.Text);
-                              BALL_MOVEMENTS = 1000 * Convert.ToDouble(speed_input.Text);
+                              dir_angle      = Convert.ToDouble(second_speed_input.Text);
+                              FIRST_MOVEMENTS = 1000 * Convert.ToDouble(first_speed_input.Text);
                         }
 
                         start_button.Text= "Pause?";
 
-                        //calculate the delta_x and delta_y
-                        delta_x = (BALL_MOVEMENTS / ball_interval) * Math.Sin(dir_angle);
-                        delta_y = (BALL_MOVEMENTS / ball_interval) * Math.Cos(dir_angle);
+                        //calculate the delta_x1 and delta_y1
+                        delta_x1 = (FIRST_MOVEMENTS / ball_interval) * Math.Sin(dir_angle);
+                        delta_y1 = (FIRST_MOVEMENTS / ball_interval) * Math.Cos(dir_angle);
                         runtime = State.Line;
 
                         ball_clock.Enabled = true;
@@ -293,12 +315,12 @@ public class CollidingBallsInterface: Form
             }
             else  
             {
-                  x_coord += delta_x;
-                  y_coord += delta_y;
+                  x1_coord += delta_x1;
+                  y1_coord += delta_y1;
             }
 
-            x_output.Text = Convert.ToString((Convert.ToInt32(x_coord) + 10));
-            y_output.Text = Convert.ToString((Convert.ToInt32(y_coord) + 10));
+            first_location_output.Text = Convert.ToString((Convert.ToInt32(x1_coord) + 10));
+            second_location_output.Text = Convert.ToString((Convert.ToInt32(y1_coord) + 10));
 
             ball_mover.Refresh(); 
       }
@@ -312,26 +334,26 @@ public class CollidingBallsInterface: Form
       //Helper Method to Process Collisions
       protected bool collisionCheck()
       {
-            if(x_coord + delta_x < 0 || x_coord + delta_x > 980) 
+            if(x1_coord + delta_x1 < 0 || x1_coord + delta_x1 > 980) 
                   {    
                         
-                        if(x_coord < 500) 
-                              {x_coord = 0; y_coord = y_coord + (delta_y * (x_coord / delta_x));}
+                        if(x1_coord < 500) 
+                              {x1_coord = 0; y1_coord = y1_coord + (delta_y1 * (x1_coord / delta_x1));}
                         else 
-                              {x_coord = 980; y_coord = y_coord + (delta_y * ((980 - x_coord) / delta_x));}
-                        delta_x = delta_x * -1;
+                              {x1_coord = 980; y1_coord = y1_coord + (delta_y1 * ((980 - x1_coord) / delta_x1));}
+                        delta_x1 = delta_x1 * -1;
                         return true;
                   }
 
-            if(y_coord + delta_y < 0 || y_coord + delta_y > 680) 
+            if(y1_coord + delta_y1 < 0 || y1_coord + delta_y1 > 680) 
                   {
                         
-                        if(y_coord < 350) 
-                              {y_coord = 0; x_coord = x_coord + (delta_x * (y_coord / delta_y));}
+                        if(y1_coord < 350) 
+                              {y1_coord = 0; x1_coord = x1_coord + (delta_x1 * (y1_coord / delta_y1));}
                         else 
-                              {y_coord = 680; x_coord = x_coord + (delta_x * (680 - y_coord / delta_y));}
+                              {y1_coord = 680; x1_coord = x1_coord + (delta_x1 * (680 - y1_coord / delta_y1));}
                         
-                        delta_y = delta_y * -1;
+                        delta_y1 = delta_y1 * -1;
                         return true;
                   }
             return false;
@@ -361,8 +383,8 @@ public class CollidingBallsInterface: Form
                         break;
 
                   default:
-                        Console.WriteLine("A Ball Is Moving - Currently At ( " + Convert.ToString(x_coord) + ", " + Convert.ToString(y_coord) + ")");
-                        graph.FillEllipse(paint_brush ,Convert.ToInt32(x_coord), Convert.ToInt32(y_coord),20,20);
+                        Console.WriteLine("A Ball Is Moving - Currently At ( " + Convert.ToString(x1_coord) + ", " + Convert.ToString(y1_coord) + ")");
+                        graph.FillEllipse(paint_brush ,Convert.ToInt32(x1_coord), Convert.ToInt32(y1_coord),20,20);
                         break;
             }
             
